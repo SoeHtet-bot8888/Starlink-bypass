@@ -1,4 +1,4 @@
-import os
+import 
 import requests
 
 # သင့် GitHub ရဲ့ key.txt လင့်ခ်ကို ဒီနေရာမှာ ထည့်ပါ (Raw link ဖြစ်ရပါမယ်)
