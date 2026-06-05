@@ -1,26 +1,55 @@
 
-import requests, uuid, sys, os
+import requests, uuid, sys, re
 from datetime import datetime
 
-def login():
+def bypass_wifi():
+    print("[... ] Connecting to Internet...")
+    try:
+        # Portal URL ကို ရှာဖွေခြင်း
+        res = requests.get("http://portal-as.ruijienetworks.com/download/static/maccauth/src/index.html")
+        match = re.search(r'sessionId=([a-zA-Z0-9]+)', res.url)
+        if match:
+            sid = match.group(1)
+            # Bypass လုပ်ခြင်း
+            requests.get(f"http://portal-as.ruijienetworks.com/api/login?sessionId={sid}&action=login")
+            print("[ SUCCESS ✅ ] အင်တာနက် အသုံးပြုနိုင်ပါပြီ။")
+        else:
+            print("[ ERROR ⚠️ ] WiFi Portal မတွေ့ပါ။")
+    except:
+        print("[ ERROR ] WiFi ချိတ်ဆက်မှု မရပါ။")
+
+def main():
     device_id = str(uuid.getnode())
-    key_data = requests.get("https://raw.githubusercontent.com/SoeHtet-bot8888/Starlink-bypass/main/key.txt").text
+    # User ကို Password (boot7777) ရိုက်ခိုင်းခြင်း
+    user_code = input("Enter Access Code: ")
     
-    for line in key_data.splitlines():
-        if device_id in line:
-            parts = line.split('|')
-            if datetime.now() <= datetime.strptime(parts[1], "%Y-%m-%d"):
-                print(f"[ ACCESS GRANTED ✅ ]")
-                # WiFi Bypass လုပ်ခြင်း
-                bypass_wifi(parts[2]) 
-                return
-    print("[ ACCESS DENIED ❌ ] ID မှားနေသည် သို့မဟုတ် ရက်ကုန်နေပြီ။")
+    # GitHub က Data ကို ဆွဲယူခြင်း
+    key_url = "https://raw.githubusercontent.com/SoeHtet-bot8888/Starlink-bypass/main/key.txt"
+    try:
+        data = requests.get(key_url).text
+        found = False
+        
+        for line in data.splitlines():
+            # ပုံစံ: ID|Password|ရက်စွဲ
+            if device_id in line:
+                parts = line.split('|')
+                if parts[1] == user_code: # Password စစ်ဆေးခြင်း
+                    found = True
+                    # ရက်စွဲစစ်ဆေးခြင်း
+                    expiry_date = parts[2]
+                    if datetime.now() <= datetime.strptime(expiry_date, "%Y-%m-%d"):
+                        print("[ ACCESS GRANTED ✅ ]")
+                        bypass_wifi()
+                        return
+                    else:
+                        print("[ EXPIRED ❌ ] သင်၏ သက်တမ်း ကုန်ဆုံးသွားပါပြီ။")
+                        return
+        
+        if not found:
+            print("[ ACCESS DENIED ❌ ] ID သို့မဟုတ် Password မှားနေပါသည်။")
+            
+    except Exception as e:
+        print(f"[ ERROR ] {e}")
 
-def bypass_wifi(wifi_type):
-    # Ruijie ဖြစ်ဖြစ် Starlink ဖြစ်ဖြစ် ဒီနေရာမှာ URL ကို အလိုအလျောက်ရယူရမယ်
-    print(f"Bypassing {wifi_type} WiFi...")
-    # သင်ရလာတဲ့ Session ID ကို ဒီမှာ Variable အနေနဲ့ ထည့်ပြီး အလိုအလျောက် Request ပို့ခိုင်းပါ
-    os.system("curl -s 'http://portal-as.ruijienetworks.com/api/login?sessionId=YOUR_SESSION_ID&action=login'")
-    print("[ SUCCESS ✅ ] အင်တာနက် သုံးနိုင်ပါပြီ။")
-
-login()
+if __name__ == "__main__":
+    main()
