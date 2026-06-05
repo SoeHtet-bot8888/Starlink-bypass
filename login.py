@@ -27,8 +27,7 @@ def check_auth():
         print(f"Error connecting to server: {e}")
 
 if __name__ == "__main__":
-    check_auth()import os
-import requests
+    check_auth()
 
 # key.txt ရဲ့ Raw URL ကို ဒီနေရာမှာ ထည့်ပါ
 KEY_URL = "https://raw.githubusercontent.com/SoeHtet-bot8888/Starlink-bypass/main/key.txt"
