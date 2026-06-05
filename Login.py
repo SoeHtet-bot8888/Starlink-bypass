@@ -25,7 +25,7 @@ def main():
     user_code = input("Enter Access Code: ").strip()
     
     # [!] ဒီနေရာမှာ သင့် Google Sheet ရဲ့ Link ကို ထည့်ပါ
-    sheet_url ="https://docs.google.com/spreadsheets/d/1bMDcruZ54e_9eAoxDZgySsL-nLDCdOrB3aE_jHpdWLA/export?format=csv" "YOUR_GOOGLE_SHEET_CSV_LINK_HERE" 
+    sheet_url =https://docs.google.com/spreadsheets/d/1bMDcruZ54e_9eAoxDZgySsL-nLDCdOrB3aE_jHpdWLA/export?format=csv
     
     try:
         response = requests.get(sheet_url, verify=False)
