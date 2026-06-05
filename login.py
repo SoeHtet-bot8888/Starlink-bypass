@@ -24,7 +24,7 @@ def check_auth():
             print("Status: [ ACCESS DENIED ❌ ]")
             print(f"❌ သင့် ID [{device_id}] ကို Server တွင် မတွေ့ပါ။")
     except Exception as e:
-        print(f"Error connecting to server: {e}")
+        print(f"Error: {e}")
 
 if __name__ == "__main__":
     check_auth()
